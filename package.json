@@ -1,0 +1,16 @@
+{
+  "name": "1512574",
+  "version": "1.0.0",
+  "description": "",
+  "main": "GUI.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "querystring": "^0.2.0",
+    "url": "^0.11.0",
+    "xml2js": "^0.4.19"
+  }
+}
