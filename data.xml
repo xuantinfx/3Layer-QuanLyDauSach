@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <DS_Dau_Sach>
-  <Dau_Sach Ten="Nỗi khổ của người yêu xa" MaDauSach="0" TacGia="Đào Xuân Tin" TheLoai="Ngôn tình"/>
-  <Dau_Sach Ten="Những chuyến đi đến vùng đất mơi" MaDauSach="1" TacGia="Anh Tuân" TheLoai="Đam mỹ"/>
+  <Dau_Sach Ten="Chào thế giới mới" MaDauSach="0" TacGia="Alex" TheLoai="Khám phá"/>
+  <Dau_Sach Ten="Nỗi khổ của những người xa nhau" MaDauSach="1" TacGia="Bùi Tiến" TheLoai="Tình cảm"/>
+  <Dau_Sach Ten="Bao nhiêu tiền cho một ngày công" MaDauSach="2" TacGia="Chiến Bình" TheLoai="Bàn luận"/>
+</DS_Dau_Sach>

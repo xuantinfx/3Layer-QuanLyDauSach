@@ -16,7 +16,6 @@ http.createServer((req, res) => {
             pathname,
             query
         } = URL.parse(req.url, true);
-        console.log(pathname, query)
         switch (pathname) {
             case '/danh-sach-dau-sach':
                 return DAL.read(__dirname + pathData)

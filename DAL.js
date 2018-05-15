@@ -18,7 +18,13 @@ module.exports.insert = (path, data) => {
             if (err) {
                 return reject(err)
             }
-            let MaDauSachTiepTheo = parseInt(XMLDOM.DS_Dau_Sach.Dau_Sach[XMLDOM.DS_Dau_Sach.Dau_Sach.length - 1].$.MaDauSach) + 1;
+            let MaDauSachTiepTheo = 0;
+            if (XMLDOM.DS_Dau_Sach.Dau_Sach === undefined) {
+                XMLDOM.DS_Dau_Sach = {}
+                XMLDOM.DS_Dau_Sach.Dau_Sach = [];
+            } else {
+                MaDauSachTiepTheo = parseInt(XMLDOM.DS_Dau_Sach.Dau_Sach[XMLDOM.DS_Dau_Sach.Dau_Sach.length - 1].$.MaDauSach) + 1;
+            }
             XMLDOM.DS_Dau_Sach.Dau_Sach.push({
                 $: {
                     'Ten': data.Ten,

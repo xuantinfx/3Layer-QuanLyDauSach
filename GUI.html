@@ -8,62 +8,255 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-        crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
 
-<body>
+<body onload="firstLoad()">
     <div class="container">
-        <ul class="list-group">
-            <li class="list-group-item active">Quản lý thông tin đầu sách trong thư viện trực tuyến</li>
-            <li class="list-group-item">
-                <div class="media">
-                    <div class="media-body">
-                        <h5 class="mt-0">
-                            <b>Tựa sách: </b>Nỗi khổ của người yêu xa</h5>
-                        <h5 class="mt-0">
-                            <b>Tác giả: </b>Đào Xuân Tin</h5>
-                        <h5 class="mt-0">
-                            <b>Thể loại: </b>Ngôn tình</h5>
-                        <button class="btn btn-warning">Edit</button>
-                        <button class="btn btn-danger">Delete</button>
-                    </div>
-                </div>
-            </li>
-            <li class="list-group-item">
-                <div class="media">
-                    <div class="media-body">
-                        <h5 class="mt-0">
-                            <b>Tựa sách: </b>Những chuyến đi đến vùng đất mơi</h5>
-                        <h5 class="mt-0">
-                            <b>Tác giả: </b>Anh Tuân</h5>
-                        <h5 class="mt-0">
-                            <b>Thể loại: </b>Đam mỹ</h5>
-                        <button class="btn btn-warning">Edit</button>
-                        <button class="btn btn-danger">Delete</button>
-                    </div>
-                </div>
-            </li>
-        </ul>
-
     </div>
     <!-- Optional JavaScript -->
     <script>
+        /********* GUI ********/
+        const taoDauSach = function (item, DauSach) {
+            item.innerHTML =
+                `
+                <div class="media">
+                    <div class="media-body">
+                        <p class="mt-0">
+                            <b>Tựa sách: </b>${DauSach.getAttribute('Ten')}</p>
+                        <p class="mt-0">
+                            <b>Tác giả: </b>${DauSach.getAttribute('TacGia')}</p>
+                        <p class="mt-0">
+                            <b>Thể loại: </b>${DauSach.getAttribute('TheLoai')}</p>
+                        <button onclick='editBook(${DauSach.getAttribute('MaDauSach')})' class="btn btn-warning">Edit</button>
+                        <button onclick='XL_deleteBook(${DauSach.getAttribute('MaDauSach')})' class="btn btn-danger">Delete</button>
+                    </div>
+                </div>
+                `
+            return item;
+        }
+        const taoDSDauSach = function (DS_Dau_Sach) {
+            //Tao node cho ul
+            let TH_DS_Dau_Sach = document.createElement('ul');
+            TH_DS_Dau_Sach.className = 'list-group';
+            let temp;
+            //tao tieu de cho ul
+            temp = document.createElement('li');
+            temp.className = 'list-group-item active';
+            temp.innerText = `Quản lý thông tin đầu sách trong thư viện trực tuyến`;
+            //them vao list
+            TH_DS_Dau_Sach.appendChild(temp);
+            for (let i = 0; i < DS_Dau_Sach.length; i++) {
+                temp = document.createElement('li');
+                temp.setAttribute('id', DS_Dau_Sach[i].getAttribute('MaDauSach'))
+                temp.className = 'list-group-item';
+                temp = taoDauSach(temp, DS_Dau_Sach[i])
+                //them dau sach vao ul
+                TH_DS_Dau_Sach.appendChild(temp)
+            }
+            //them button them dau sach
+            temp = document.createElement('li');
+            temp.className = 'list-group-item';
+            temp.innerHTML =
+                `
+            <button onclick='taoThemSach()' class="btn btn-success">Insert Book</button>
+            `
+            TH_DS_Dau_Sach.appendChild(temp);
+
+            return TH_DS_Dau_Sach;
+        }
+        const taoEditDauSach = function (DauSach) {
+            let temp = document.createElement('div');
+            temp.className = 'media';
+            temp.innerHTML =
+                `
+            <div class="media-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="inputGroupSelect01">Tên đầu sách</label>
+                            </div>
+                            <input type="text" class="form-control" name="" id="tendausach${DauSach.getAttribute('MaDauSach')}" placeholder="Nhập tên đầu sách" value="${DauSach.getAttribute('Ten')}">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="inputGroupSelect01">Tên tác giả</label>
+                            </div>
+                            <input type="text" class="form-control" name="" id="tentacgia${DauSach.getAttribute('MaDauSach')}" placeholder="Nhập tên đầu sách" value="${DauSach.getAttribute('TacGia')}">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="inputGroupSelect01">Tên thể loại</label>
+                            </div>
+                            <input type="text" class="form-control" name="" id="tentheloai${DauSach.getAttribute('MaDauSach')}" placeholder="Nhập tên đầu sách" value="${DauSach.getAttribute('TheLoai')}">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <button onclick='cancle(${DauSach.getAttribute('MaDauSach')})' class="btn btn-secondary">Cancel</button>
+                        <button onclick='XL_suaDauSach(${DauSach.getAttribute('MaDauSach')})' class="btn btn-success">Save</button>
+                    </div>
+                </div>
+            </div>
+            `
+            return temp;
+        }
+        const taoThemSach = function () {
+            let main = document.getElementsByTagName('li');
+            main = main[main.length - 1];
+
+            let temp = document.createElement('div');
+            temp.className = 'media';
+            temp.innerHTML =
+                `
+            <div class="media-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="inputGroupSelect01">Tên đầu sách</label>
+                            </div>
+                            <input type="text" class="form-control" name="" id="tendausach" placeholder="Nhập tên đầu sách" >
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="inputGroupSelect01">Tên tác giả</label>
+                            </div>
+                            <input type="text" class="form-control" name="" id="tentacgia" placeholder="Nhập tác giả" >
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="inputGroupSelect01">Tên thể loại</label>
+                            </div>
+                            <input type="text" class="form-control" name="" id="tentheloai" placeholder="Nhập tên thể loại" >
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <button onclick='cancleThemSach()' class="btn btn-secondary">Cancel</button>
+                        <button onclick='XL_themDauSach()' class="btn btn-success">Save</button>
+                    </div>
+                </div>
+            </div>
+            `
+            main.innerHTML = '';
+            main.appendChild(temp);
+        }
+
+        const cancleThemSach = function () {
+            let main = document.getElementsByTagName('li');
+            main = main[main.length - 1];
+            main.innerHTML =
+                `
+            <button onclick='taoThemSach()' class="btn btn-success">Insert Book</button>`
+        }
+
+        const renderFirstScreen = function (ds_dau_sach) {
+            let th_ds_dau_sach = taoDSDauSach(ds_dau_sach);
+            let temp = document.getElementsByClassName('container')[0];
+            temp.innerHTML = ''
+            temp.appendChild(th_ds_dau_sach);
+        }
+        const reRenderScreen = function (data) {
+            if (data != '') {
+                let ds_dau_sach = data.getElementsByTagName('Dau_Sach');
+                g_ds_dau_sach = ds_dau_sach;
+                renderFirstScreen(ds_dau_sach);
+            }
+        }
+        /********* Xu li su kien ********/
+        const editBook = function (id) {
+            let main = document.getElementById(id);
+            main.innerHTML = '';
+            main.appendChild(taoEditDauSach(g_ds_dau_sach[parseInt(id)]))
+        }
+        const cancle = function (id) {
+            let main = document.getElementById(id);
+            main.innerHTML = '';
+            taoDauSach(main, g_ds_dau_sach[parseInt(id)])
+        }
+        const XL_deleteBook = function (id) {
+            xoaDauSach(id);
+        }
+        const XL_themDauSach = function () {
+            let tenDauSach = $('#tendausach').val();
+            let tenTacGia = $('#tentacgia').val();
+            let tenTheLoai = $('#tentheloai').val();
+            themDauSach({Ten: tenDauSach, TacGia: tenTacGia, TheLoai: tenTheLoai})
+        }
+
+        const XL_suaDauSach = function (id) {
+            let tenDauSach = $('#tendausach'+id).val();
+            let tenTacGia = $('#tentacgia'+id).val();
+            let tenTheLoai = $('#tentheloai'+id).val();
+            capNhatDauSach({MaDauSach: id, Ten: tenDauSach, TacGia: tenTacGia, TheLoai: tenTheLoai})
+        }
+        /********* DAL ********/
         const urlBus = 'http://localhost:3000';
-        let dataa;
-        let onloadeddata = function () {
-            $.get(urlBus + '/danh-sach-dau-sach', data => {
-                console.log(data);
-                dataa = data;
-            })
+
+        let g_ds_dau_sach;
+
+        const firstLoad = function () {
+            $.get(urlBus + "/danh-sach-dau-sach", function (data, status) {
+                let ds_dau_sach = data.getElementsByTagName('Dau_Sach');
+                g_ds_dau_sach = ds_dau_sach;
+                renderFirstScreen(ds_dau_sach);
+            });
+        }
+
+        const themDauSach = function (dauSach) {
+            $.post(urlBus + '/them-dau-sach', {
+                    Ten: dauSach.Ten,
+                    TacGia: dauSach.TacGia,
+                    TheLoai: dauSach.TheLoai
+                },
+                function (data, status) {
+                    reRenderScreen(data)
+                });
+        }
+        const capNhatDauSach = function (dauSach) {
+            $.post(urlBus + '/cap-nhat-dau-sach', {
+                    MaDauSach: dauSach.MaDauSach,
+                    Ten: dauSach.Ten,
+                    TacGia: dauSach.TacGia,
+                    TheLoai: dauSach.TheLoai
+                },
+                function (data, status) {
+                    reRenderScreen(data)
+                });
+        }
+        const xoaDauSach = function (MaDauSach) {
+            $.post(urlBus + '/xoa-dau-sach', {
+                    MaDauSach: MaDauSach
+                },
+                function (data, status) {
+                    reRenderScreen(data)
+                });
         }
     </script>
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-        crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 </body>
 
 </html>
